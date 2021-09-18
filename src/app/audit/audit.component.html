@@ -1,0 +1,91 @@
+<h1>Hi {{ currentUser.firstName }}!</h1>
+<p>You're logged in with Angular 8!!</p>
+<h3>All login audit :</h3>
+
+<div
+  class="dropdown-menu btn btn-secondary dropdown-toggle"
+  aria-labelledby="dropdownMenuButton"
+>
+  <option class="dropdown-item" href="#">12H</option>
+  <option class="dropdown-item" href="#">24H</option>
+</div>
+
+<div class="form-group">
+  <label for="status">Status</label>
+  <select
+    class="form-control"
+    name="status"
+    [(ngModel)]="selectedType"
+    (change)="onChange($event)"
+  >
+    <option class="dropdown-item" href="#">Select Date</option>
+    <option value="12H">12H</option>
+    <option value="24H">24H</option>
+  </select>
+</div>
+
+<input
+  class="form-control"
+  type="text"
+  name="search"
+  [(ngModel)]="search"
+  placeholder="Search.."
+  (ngModelChange)="Search()"
+/>
+<table class="table" id="dtOrderExample" width="100%">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col" style="cursor: pointer" (click)="sort('user', ascending)">
+        User
+      </th>
+      <th scope="col" style="cursor: pointer" (click)="sort('_id', ascending)">
+        User Id
+      </th>
+      <th
+        scope="col"
+        style="cursor: pointer"
+        (click)="sort('loginTime', ascending)"
+      >
+        Login Time
+      </th>
+      <th
+        scope="col"
+        style="cursor: pointer"
+        (click)="sort('logoutTime', ascending)"
+      >
+        Logout Time
+      </th>
+      <th scope="col" style="cursor: pointer" (click)="sort('ip', ascending)">
+        Ip Address
+      </th>
+    </tr>
+  </thead>
+
+  <tbody
+    *ngFor="
+      let audit of audits | paginate: { itemsPerPage: 10, currentPage: page }
+    "
+  >
+    <tr>
+      <th>{{ audit.user }}</th>
+      <td>{{ audit._id }}</td>
+
+      <td *ngIf="selectedType == '24H'">
+        {{ audit.loginTime | date: 'dd/MM/yyyy HH:mm' }}
+      </td>
+
+      <td *ngIf="selectedType == '12H'">
+        {{ audit.loginTime | date: 'short' }}
+      </td>
+
+      <td>{{ audit.logoutTime | date: 'short' }}</td>
+      <td>{{ audit.ip }}</td>
+    </tr>
+  </tbody>
+
+  <pagination-controls
+    autoHide="true"
+    responsive="true"
+    (pageChange)="page = $event"
+  ></pagination-controls>
+</table>
